@@ -35,7 +35,7 @@ RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Docker daemon entrypoint
-ADD ./dockerd-entrypoint.sh /usr/local/bin
+ADD ./entrypoint.sh /usr/local/bin
 
 # Prepare rootless user
 RUN set -ex \
