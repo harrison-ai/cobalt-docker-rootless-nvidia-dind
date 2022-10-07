@@ -35,7 +35,7 @@ RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Docker daemon entrypoint
-ADD ./dockerd-entrypoint.sh /usr/local/bin
+ADD ./entrypoint.sh /usr/local/bin
 
 # Prepare rootless user
 RUN set -ex \
@@ -47,5 +47,5 @@ RUN set -ex \
 VOLUME /home/rootless/.local/share/docker
 
 EXPOSE 2375
-ENTRYPOINT ["/usr/local/bin/dockerd-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD []
