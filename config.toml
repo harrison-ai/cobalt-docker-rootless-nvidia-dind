@@ -1,0 +1,2 @@
+[nvidia-container-cli]
+no-cgroups = true
