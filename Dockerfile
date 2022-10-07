@@ -47,5 +47,5 @@ RUN set -ex \
 VOLUME /home/rootless/.local/share/docker
 
 EXPOSE 2375
-ENTRYPOINT ["/usr/local/bin/dockerd-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD []
