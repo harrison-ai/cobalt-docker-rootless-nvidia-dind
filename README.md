@@ -30,7 +30,7 @@ The image is based on the `debian:bullseye-slim` and incorperates these major co
 Launching from the CLI:
 
 ```bash
-docker run --rm -it --cap-add "SYS_ADMIN" harrisonai/rootless-nvidia-dind
+docker run --rm -it --cap-add "SYS_ADMIN" harrisonai/cobalt-rootless-nvidia-dind
 ```
 
 As a Kubernetes deployment:
@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
         - name: dind
-          image: cobalt-rootless-nvidia-dind:latest
+          image: harrisonai/cobalt-rootless-nvidia-dind:latest
           imagePullPolicy: Always
           resources:
             requests:
