@@ -61,10 +61,9 @@ spec:
     spec:
       containers:
         - name: main
-          image: ubuntu:latest
+          image: nvidia/cuda:11.8.0-base-ubuntu20.04
           command:
-            - sleep
-            - "3600"
+            - nvidia-smi
           env:
             - name: NVIDIA_VISIBLE_DEVICES
               valueFrom:
