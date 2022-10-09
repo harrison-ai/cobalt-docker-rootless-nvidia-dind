@@ -3,8 +3,7 @@
 
 set -eux
 
-# Write GPUs to NVIDIA_VISIBLE_DEVICES in ConfigMap 
-# If we're given a ConfMap
+# Write GPUs to NVIDIA_VISIBLE_DEVICES in ConfigMap
 if [ ! -z "${GPU_CONFIGMAP-}" ]; then
 	python3 allocator.py
 fi
