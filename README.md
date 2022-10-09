@@ -90,7 +90,7 @@ spec:
               add:
                 - SYS_ADMIN
           env:
-            - name: GPU_CONFIG
+            - name: GPU_CONFIGMAP
               value: nvidia-devices
           volumeMounts:
             - mountPath: /home/rootless/.local
