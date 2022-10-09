@@ -8,7 +8,7 @@ Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Run
 - Docker host needs NVIDIA container runtime to passthrough GPU.
 - Container must be run with SYS_ADMIN capability.
 - For Debian based Kubernetes hosts the annotation `"container.apparmor.security.beta.kubernetes.io/<dind-container>": "unconfined"` must exist for the pod.
-- GPU_CONFIGMAP variable with a writable ConfiMap name if you want the container to share NVIDIA_VISIBLE_DEVICES.
+- GPU_CONFIGMAP variable with a writable ConfigMap name if you want the container to share NVIDIA_VISIBLE_DEVICES.
 
 ## 💡 Motivation
 
@@ -36,21 +36,42 @@ docker run --rm -it --cap-add "SYS_ADMIN" harrisonai/cobalt-rootless-nvidia-dind
 
 As a Kubernetes deployment:
 
-```apiVersion: apps/v1
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nvidia-devices
+
+---
+
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dind
+  name: test
 spec:
   selector:
     matchLabels:
-      app: dind
+      app: test
   template:
     metadata:
       annotations:
         container.apparmor.security.beta.kubernetes.io/dind: unconfined
       labels:
-        app: dind
+        app: test
     spec:
+      containers:
+        - name: main
+          image: ubuntu:latest
+          command:
+            - sleep
+            - "3600"
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              valueFrom:
+                configMapKeyRef:
+                  name: nvidia-devices
+                  key: NVIDIA_VISIBLE_DEVICES
+                  optional: false  
       containers:
         - name: dind
           image: harrisonai/cobalt-rootless-nvidia-dind:latest
@@ -68,6 +89,9 @@ spec:
             capabilities:
               add:
                 - SYS_ADMIN
+          env:
+            - name: GPU_CONFIG
+              value: nvidia-devices
           volumeMounts:
             - mountPath: /home/rootless/.local
               name: docker
