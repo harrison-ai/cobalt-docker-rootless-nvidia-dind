@@ -1,6 +1,7 @@
 # cobalt-rootless-nvidia-dind
 
 Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Runs a rootless docker daemon with TLS disabled and the NVIDIA container runtime available.
+Will write NVIDIA_VISIBLE_DEVICES to a ConfigMap if you pass it via the GPU_CONFIGMAP environment variable to enable sharing sidecar GPUs with other containers in the pod.
 
 ## 📖 Requirements
 
@@ -8,6 +9,7 @@ Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Run
 - Docker host needs NVIDIA container runtime to passthrough GPU.
 - Container must be run with SYS_ADMIN capability.
 - For Debian based Kubernetes hosts the annotation `"container.apparmor.security.beta.kubernetes.io/<dind-container>": "unconfined"` must exist for the pod.
+- GPU_CONFIGMAP variable with a writable ConfigMap name if you want the container to share NVIDIA_VISIBLE_DEVICES.
 
 ## 💡 Motivation
 
@@ -35,21 +37,41 @@ docker run --rm -it --cap-add "SYS_ADMIN" harrisonai/cobalt-rootless-nvidia-dind
 
 As a Kubernetes deployment:
 
-```apiVersion: apps/v1
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nvidia-devices
+
+---
+
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dind
+  name: test
 spec:
   selector:
     matchLabels:
-      app: dind
+      app: test
   template:
     metadata:
       annotations:
         container.apparmor.security.beta.kubernetes.io/dind: unconfined
       labels:
-        app: dind
+        app: test
     spec:
+      containers:
+        - name: main
+          image: nvidia/cuda:11.8.0-base-ubuntu20.04
+          command:
+            - nvidia-smi
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              valueFrom:
+                configMapKeyRef:
+                  name: nvidia-devices
+                  key: NVIDIA_VISIBLE_DEVICES
+                  optional: false  
       containers:
         - name: dind
           image: harrisonai/cobalt-rootless-nvidia-dind:latest
@@ -67,6 +89,9 @@ spec:
             capabilities:
               add:
                 - SYS_ADMIN
+          env:
+            - name: GPU_CONFIGMAP
+              value: nvidia-devices
           volumeMounts:
             - mountPath: /home/rootless/.local
               name: docker

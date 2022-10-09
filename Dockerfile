@@ -1,21 +1,21 @@
 FROM debian:bullseye-slim
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG DOCKER_VERSION=20.10.18
+
+WORKDIR /app
 
 # Dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        dumb-init rootlesskit slirp4netns \
        iptables iproute2 ca-certificates \
-       containerd runc curl gnupg \
+       containerd runc curl gnupg python3-pip \
     && rm -rf \
        /usr/bin/rootlessctl \
        /usr/bin/containerd-shim-runc-v1 \
        /usr/bin/containerd-shim \
        /usr/bin/ctr
-
-# Docker version
-ENV DOCKER_VERSION=20.10.18
 
 # Docker daemon
 RUN curl "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" -o /docker.tgz \
@@ -34,8 +34,12 @@ ADD ./daemon.json /etc/docker/daemon.json
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Docker daemon entrypoint
-ADD ./entrypoint.sh /usr/local/bin
+# Project files
+COPY entrypoint.sh .
+COPY allocator.py .
+
+# Install requirements for the allocator app
+RUN pip3 install kubernetes
 
 # Prepare rootless user
 RUN set -ex \
@@ -47,5 +51,5 @@ RUN set -ex \
 VOLUME /home/rootless/.local/share/docker
 
 EXPOSE 2375
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD []
