@@ -1,6 +1,7 @@
 # cobalt-rootless-nvidia-dind
 
-Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Runs a rootless docker daemon with TLS disabled and the NVIDIA container runtime available. Will write NVIDIA_VISIBLE_DEVICES to a ConfigMap if you pass it via the GPU_CONFIGMAP environment variable.
+Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Runs a rootless docker daemon with TLS disabled and the NVIDIA container runtime available.
+Will write NVIDIA_VISIBLE_DEVICES to a ConfigMap if you pass it via the GPU_CONFIGMAP environment variable to enable sharing sidecar GPUs with other containers in the pod.
 
 ## 📖 Requirements
 
