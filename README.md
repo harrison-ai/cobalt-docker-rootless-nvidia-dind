@@ -1,6 +1,6 @@
 # cobalt-rootless-nvidia-dind
 
-Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Runs a rootless docker daemon with TLS disabled and the NVIDIA container runtime available.
+Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Runs a rootless docker daemon with TLS disabled and the NVIDIA container runtime available. Will write NVIDIA_VISIBLE_DEVICES to a ConfigMap if you pass it via the GPU_CONFIGMAP environment variable.
 
 ## 📖 Requirements
 
@@ -8,6 +8,7 @@ Rootless dind (Docker in Docker) with NVIDIA container toolkit docker image. Run
 - Docker host needs NVIDIA container runtime to passthrough GPU.
 - Container must be run with SYS_ADMIN capability.
 - For Debian based Kubernetes hosts the annotation `"container.apparmor.security.beta.kubernetes.io/<dind-container>": "unconfined"` must exist for the pod.
+- GPU_CONFIGMAP variable with a writable ConfiMap name if you want the container to share NVIDIA_VISIBLE_DEVICES.
 
 ## 💡 Motivation
 
