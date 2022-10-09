@@ -10,7 +10,7 @@ import os
 config.load_incluster_config()
 
 api_instance = client.CoreV1Api()
-name = os.environ.get("GPU_CONFIGMAP", "gpu-config")
+name = os.environ["GPU_CONFIGMAP"]
 namespace = open("/var/run/secrets/kubernetes.io/serviceaccount/namespace").read()
 body = client.V1ConfigMap(
     api_version="v1",
