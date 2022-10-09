@@ -36,11 +36,10 @@ RUN apt-get clean \
 
 # Project files
 COPY entrypoint.sh .
-COPY requirements.txt .
 COPY allocator.py .
 
 # Install requirements for the allocator app
-RUN pip3 install -r requirements.txt
+RUN pip3 install kubernetes
 
 # Prepare rootless user
 RUN set -ex \
