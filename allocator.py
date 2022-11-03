@@ -16,9 +16,14 @@ namespace = open("/var/run/secrets/kubernetes.io/serviceaccount/namespace").read
 
 # Check for volume mounted GPUS first. Revert to environment variable.
 # Allow os.environ to throw if empty.
-visible_devices=','.join([os.path.basename(x) for x in glob.glob('/var/run/nvidia-container-devices/*GPU*')])
+visible_devices= ",".join([
+    os.path.basename(x) for x in glob.glob("/var/run/nvidia-container-devices/*GPU*")
+])
 if not visible_devices:
-    visible_devices=os.environ["NVIDIA_VISIBLE_DEVICES"]
+    try:
+        visible_devices = os.environ["NVIDIA_VISIBLE_DEVICES"]
+    except KeyError as e:
+        raise ValueError("Expected NVIDIA_VISIBLE_DEVICES environment variable to be set") from e
 
 body = client.V1ConfigMap(
     api_version="v1",
