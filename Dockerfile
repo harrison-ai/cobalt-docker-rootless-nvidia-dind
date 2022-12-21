@@ -19,7 +19,7 @@ RUN apt-get update \
 
 # Docker daemon
 RUN curl "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" -o /docker.tgz \
-    && tar -xz -f /docker.tgz --strip-components=1 -C /usr/local/bin docker/dockerd \
+    && tar -xz -f /docker.tgz --strip-components=1 -C /usr/local/bin docker/dockerd docker/docker-proxy \
     && rm -f /docker.tgz
 
 # NVIDIA container toolkit
