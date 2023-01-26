@@ -8,6 +8,41 @@ if [ ! -z "${GPU_CONFIGMAP-}" ]; then
 	python3 allocator.py
 fi
 
+# Link image cache path to a shared location
+# USED WITH CAUTION!
+if [ ! -z "${DOCKER_OVERLAY_PATH-}" ]; then
+	# Make sure base path exists
+	mkdir -p /home/rootless/.local/share/docker/image
+	chown 1000 /home/rootless/.local/share/docker/image
+
+	# Link in overlay
+
+	rm -rf /home/rootless/.local/share/docker/overlay
+	mkdir -p ${DOCKER_OVERLAY_PATH}/overlay
+	chmod 777 ${DOCKER_OVERLAY_PATH}/overlay
+	chown 1000 ${DOCKER_OVERLAY_PATH}/overlay
+    ln -s ${DOCKER_OVERLAY_PATH}/overlay /home/rootless/.local/share/docker/overlay
+
+	rm -rf /home/rootless/.local/share/docker/overlay2
+	mkdir -p ${DOCKER_OVERLAY_PATH}/overlay2
+	chmod 777 ${DOCKER_OVERLAY_PATH}/overlay2
+	chown 1000 ${DOCKER_OVERLAY_PATH}/overlay2
+    ln -s ${DOCKER_OVERLAY_PATH}/overlay2 /home/rootless/.local/share/docker/overlay2
+
+	# Link in image overlay2
+	rm -rf /home/rootless/.local/share/docker/image/overlay
+	mkdir -p ${DOCKER_OVERLAY_PATH}/image/overlay
+	chmod 777 ${DOCKER_OVERLAY_PATH}/image/overlay
+	chown 1000 ${DOCKER_OVERLAY_PATH}/image/overlay
+	ln -s ${DOCKER_OVERLAY_PATH}/image/overlay /home/rootless/.local/share/docker/image/overlay
+
+	rm -rf /home/rootless/.local/share/docker/image/overlay2
+	mkdir -p ${DOCKER_OVERLAY_PATH}/image/overlay2
+	chmod 777 ${DOCKER_OVERLAY_PATH}/image/overlay2
+	chown 1000 ${DOCKER_OVERLAY_PATH}/image/overlay2
+	ln -s ${DOCKER_OVERLAY_PATH}/image/overlay2 /home/rootless/.local/share/docker/image/overlay2
+fi 
+
 # Will set the default program as dockerd with args
 # and allows user to override completely.
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
