@@ -11,6 +11,7 @@ RUN apt-get update \
        dumb-init rootlesskit slirp4netns \
        iptables iproute2 ca-certificates \
        containerd runc curl gnupg python3-pip \
+       pigz \
     && rm -rf \
        /usr/bin/rootlessctl \
        /usr/bin/containerd-shim-runc-v1 \
