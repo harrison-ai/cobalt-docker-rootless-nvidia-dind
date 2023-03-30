@@ -25,14 +25,15 @@ jobs:
 
       - name: Log in to ghcr
         uses: docker/login-action@v2
-        if: github.event_name == 'release'
+        #if: github.event_name == 'release'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish the image
-        if: github.event_name == 'release'
+        #if: github.event_name == 'release'
         run: make publish
         env:
-          TAG: test
+          TAG: "test"
+          #TAG: ${{ github.ref_name }}
