@@ -1,6 +1,6 @@
 
 .DEFAULT_GOAL := help
-IMAGE_NAME := harrisonai/cobalt-rootless-nvidia-dind
+IMAGE_NAME := ghcr.io/harrison-ai/rootless-nvidia-dind:latest
 
 ## build:                       build the docker image
 build:
