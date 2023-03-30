@@ -35,4 +35,4 @@ jobs:
         if: github.event_name == 'release'
         run: make publish
         env:
-          TAG: ${{ github.ref_name }}
+          TAG: test
