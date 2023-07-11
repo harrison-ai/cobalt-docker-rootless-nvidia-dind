@@ -46,10 +46,7 @@ RUN pip3 install kubernetes
 RUN set -ex \
     && mkdir /run/user \
     && chmod 1777 /run/user \
-    && adduser --home /home/rootless --gecos 'Rootless' --disabled-password --uid 1000 rootless \
-    && mkdir -p /home/rootless/.local/share/docker \
-    && chown -R rootless:rootless /home/rootless
-VOLUME /home/rootless/.local/share/docker
+    && adduser --home /home/rootless --gecos 'Rootless' --disabled-password --uid 1000 rootless
 
 EXPOSE 2375
 ENTRYPOINT ["/app/entrypoint.sh"]

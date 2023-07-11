@@ -22,6 +22,8 @@ if [ "$1" = 'dockerd' ]; then
 	# We expect to initially run as root so we can mount
 	# sys paths then re-exec as rootless user
 	if [ "$(id -u)" = '0' ]; then
+		mkdir -p /home/rootless/.local
+		chown rootless:rootless /home/rootless/.local
 		mkdir -p /unmasked-proc
 		mount -t proc proc /unmasked-proc
 		mkdir -p /unmasked-sys
@@ -44,6 +46,7 @@ if [ "$1" = 'dockerd' ]; then
 
 	# Use dumb-init to properly handle signals
 	# Use rootlesskit to kick off dockerd rootless
+	# Data dir ~/.local/share/docker
 	exec dumb-init rootlesskit \
 		--pidns \
 		--disable-host-loopback \
